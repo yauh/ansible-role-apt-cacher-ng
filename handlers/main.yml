@@ -1,2 +1,6 @@
 ---
-# handlers file for yauh.apt-cacher-ng
+# handlers file for yauh.squid-deb-proxy
+- name: restart squid-deb-proxy
+  service: name=squid-deb-proxy state=restarted
+- name: restart avahi-daemon
+  service: name=avahi-daemon state=restarted

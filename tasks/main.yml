@@ -1,2 +1,21 @@
 ---
-# tasks file for yauh.apt-cacher-ng
+# tasks file for yauh.squid-deb-proxy
+- name: Install server software
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  with_items:
+    - squid-deb-proxy
+    - avahi-utils
+  when: "'squid-deb-proxy' in group_names"
+
+- name: Install client software
+  apt: pkg={{ item }} state=latest update_cache=yes cache_valid_time=3600
+  with_items:
+    - squid-deb-proxy-client
+  when: "'squid-deb-proxy' not in group_names"
+
+- name: Enable squid-deb-proxy on boot
+  service: name=squid-deb-proxy state=started enabled=yes
+  when: "'squid-deb-proxy' in group_names"
+  notify:
+    - restart squid-deb-proxy
+    - restart avahi-daemon
